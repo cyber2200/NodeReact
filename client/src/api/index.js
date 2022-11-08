@@ -1,5 +1,7 @@
+import env from "react-dotenv";
+
 export async function login({ email, password }) {
-  return await fetch("/api/auth/login", {
+  return await fetch(`${env.BACKEND_API_URL}/api/auth/login`, {
     method: "POST",
     body: JSON.stringify({ email, password }),
     headers: { "Content-Type": "application/json" },
@@ -17,8 +19,8 @@ export async function login({ email, password }) {
     });
 }
 
-export async function searchArtworks({ keyword }) {
-  return await fetch(`/api/homepage/getArtworks/${keyword}`, {
+export async function searchArtworks({ keyword, numberOfRows }) {
+  return await fetch(`${env.BACKEND_API_URL}/api/homepage/getArtworks/${keyword}&numberOfRows=${numberOfRows}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   })

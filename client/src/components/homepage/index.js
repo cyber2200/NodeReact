@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -11,26 +11,64 @@ import {
   Card,
 } from "react-bootstrap";
 import { searchArtworks } from "../../api";
+import env from "react-dotenv";
 
 function Homepage({ onLogout }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isNumberOfRowsError, setIsNumberOfRowsError] = useState(false);
   const [noArtworksFound, setNoArtworksFound] = useState(false);
-  const [keyword, setKeyword] = useState("");
+
+  let defaultKeywordValue = '';
+  if (env.DEFAULT_KEYWORD !== '') {
+    defaultKeywordValue = env.DEFAULT_KEYWORD;
+  }
+  const [keyword, setKeyword] = useState(defaultKeywordValue);
+  const [numberOfRows, setNumberOfRows] = useState("");
   const [artworks, setArtworks] = useState([]);
 
   const onChangeKeyword = (event) => {
     setKeyword(event.target.value);
   };
 
-  const onSearchArtworks = async (event) => {
-    event.preventDefault();
+  const onChangeNumberOfRows = (event) => {
+    setNumberOfRows(event.target.value);
+  };
+
+  useEffect(() => {
+    if (env.DEFAULT_KEYWORD !== '') {
+      const getData = async () => {
+        await searchAction();
+      }
+      getData();
+    }
+    console.log('useEffect');
+  }, []);
+
+  const searchAction = async () => {
+    setIsNumberOfRowsError(false);
     setIsLoading(true);
-    const artworks = await searchArtworks({ keyword });
+    const artworks = await searchArtworks({ keyword, numberOfRows });
     setArtworks(artworks);
     setNoArtworksFound(!artworks || !artworks.length);
     setIsLoading(false);
-  };
+  }
 
+  const onSearchArtworks = async (event) => {
+    event.preventDefault();
+
+    // Number of rows validation
+    if (numberOfRows !== ''){
+      if (! /^\d+$/.test(numberOfRows)) { // If it's not a number
+        setIsNumberOfRowsError(true);
+        return;
+      }
+      if (parseInt(numberOfRows) < 5 || parseInt(numberOfRows) > 50) { // If it's not in range
+        setIsNumberOfRowsError(true);
+        return;
+      }
+    }
+    await searchAction();
+  };
   return (
     <Container fluid>
       <Row className="mt-2 mb-2 justify-content-end" noGutters>
@@ -56,6 +94,14 @@ function Homepage({ onLogout }) {
               onChange={onChangeKeyword}
               value={keyword}
             />
+            { env.LIMIT_FEATURE_FLAG === "1" &&
+              <Form.Control
+                type="text"
+                placeholder="Number of rows, between 5-50"
+                onChange={onChangeNumberOfRows}
+                value={numberOfRows}
+              />
+            }
             <InputGroup.Prepend>
               <Button
                 variant="outline-primary"
@@ -68,6 +114,11 @@ function Homepage({ onLogout }) {
           </InputGroup>
         </Form>
       </Row>
+      {isNumberOfRowsError && (
+        <Alert variant={"info"}>
+          Number of rows should be from 5 to 50
+        </Alert>
+      )} 
       {isLoading && (
         <Row className="justify-content-center mb-5">
           <Spinner animation="border" variant="primary" />
