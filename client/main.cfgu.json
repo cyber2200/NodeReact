@@ -1,0 +1,14 @@
+{
+  "BACKEND_API_URL": {
+	  "type": "String",
+	  "default": "http://localhost:3000"
+  },
+  "DEFAULT_KEYWORD": {
+	  "type": "String",
+	  "default": ""
+  },
+  "LIMIT_FEATURE_FLAG": {
+    "type": "Boolean",
+	  "default": "1"
+  }
+}

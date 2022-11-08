@@ -1,0 +1,22 @@
+{
+  "PORT": {
+	  "type": "Number",
+	  "default": "3000"
+  },
+  "ARTWORKS_LIMIT": {
+	  "type": "Number",
+	  "default": "5"
+  },
+  "ARTWORKS_FIELDS": {
+	  "type": "String",
+	  "default": "id,title,image_id,date_display,artist_display,place_of_origin,medium_display"
+  },  
+  "ARTWORKS_API_URL": {
+	  "type": "String",
+	  "default": "https://api.artic.edu/api/v1"
+  },
+  "ARTWORKS_IMG_BASE_URL": {
+	  "type": "String",
+	  "default": "https://www.artic.edu/iiif/2"
+  }
+}

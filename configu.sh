@@ -1,0 +1,2 @@
+Configu upsert --set "/" --schema "./main.cfgu.json" --config "PORT=3000" --config "ARTWORKS_LIMIT=5" --config "ARTWORKS_FIELDS=id,title,image_id,date_display,artist_display,place_of_origin,medium_display" --config "ARTWORKS_API_URL=https://api.artic.edu/api/v1" --config="ARTWORKS_IMG_BASE_URL=https://www.artic.edu/iiif/2"
+Configu export --set "/example" --schema "./main.cfgu.json" --format "Dotenv" > ".env"
